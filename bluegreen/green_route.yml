@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Route
+metadata:
+  name: green
+spec:
+  port:
+    targetPort: 8080-tcp
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: green
+    weight: 100
+  wildcardPolicy: None
+status: { }
+

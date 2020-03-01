@@ -1,0 +1,25 @@
+FROM rootproject/root-ubuntu16:latest
+
+USER root
+# Install dependencies
+RUN apt-get update && \
+ apt-get -y install apache2
+
+# Install apache and write hello world message
+RUN echo '<h1><font color="blue"> Hello World! </font></h1>' > /var/www/html/index.html
+USER root
+RUN mkdir -p /var/run/apache2
+RUN mkdir -p /var/lock/apache2
+RUN chmod -R 777 /var /etc /run
+RUN echo 'ServerName localhost' >> /etc/apache2/apache2.conf
+# Configure apache
+RUN echo '. /etc/apache2/envvars' > /run_apache.sh && \
+ echo '/usr/sbin/apache2 -D FOREGROUND' >> /run_apache.sh && \ 
+chmod 755 /run_apache.sh
+USER root
+COPY ./ports.conf /etc/apache2/ports.conf
+USER root
+RUN chown -R root:root /var
+EXPOSE 8080
+USER root
+CMD /run_apache.sh
